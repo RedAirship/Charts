@@ -50,6 +50,8 @@ open class ChartDataSet: ChartBaseDataSet
     {
         self.init(entries: entries, label: "DataSet")
     }
+    /// instance of the data-provider
+    @objc public weak var chart: ChartDataProvider?
 
     // MARK: - Data functions and accessors
 
@@ -198,6 +200,20 @@ open class ChartDataSet: ChartBaseDataSet
     {
         let match: (ChartDataEntry) -> Bool = {
             $0.x > xValue - 0.5 && $0.x <= xValue + 0.5
+        }
+        guard let ind = firstIndex(where: match) else {
+            return []
+        }
+        let i = distance(from: startIndex, to: ind)
+        return self[i...].prefix(while: match)
+    }
+
+    /// - Returns: All Entry objects found at the given x-value and located within specified barwidth with binary search.
+    /// An empty array if no Entry object at that x-value.
+    open override func entriesForXValue(_ xValue: Double, barWidth: Double) -> [ChartDataEntry] {
+        let match: (ChartDataEntry) -> Bool = {
+            let halfBarWidth = barWidth / 2.0
+            return $0.x > xValue - halfBarWidth && $0.x <= xValue + halfBarWidth
         }
         guard let ind = firstIndex(where: match) else {
             return []

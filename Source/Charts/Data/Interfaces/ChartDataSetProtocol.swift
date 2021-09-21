@@ -72,6 +72,10 @@ public protocol ChartDataSetProtocol
     /// - Returns: All Entry objects found at the given x-value with binary search.
     /// An empty array if no Entry object at that x-value.
     func entriesForXValue(_ xValue: Double) -> [ChartDataEntry]
+
+    /// - Returns: All Entry objects found at the given x-value and located within specified barwidth with binary search.
+    /// An empty array if no Entry object at that x-value.
+    func entriesForXValue(_ xValue: Double, barWidth: Double) -> [ChartDataEntry]
     
     /// - Parameters:
     ///   - xValue: x-value of the entry to search for

@@ -48,7 +48,7 @@ open class ChartHighlighter : NSObject, Highlighter
     @objc open func getHighlight(xValue xVal: Double, x: CGFloat, y: CGFloat) -> Highlight?
     {
         guard let chart = chart else { return nil }
-        
+
         let closestValues = getHighlights(xValue: xVal, x: x, y: y)
         guard !closestValues.isEmpty else { return nil }
         
@@ -92,13 +92,20 @@ open class ChartHighlighter : NSObject, Highlighter
         rounding: ChartDataSetRounding) -> [Highlight]
     {
         guard let chart = self.chart as? BarLineScatterCandleBubbleChartDataProvider else { return [] }
-        
-        var entries = set.entriesForXValue(xValue)
-        if entries.isEmpty, let closest = set.entryForXValue(xValue, closestToY: .nan, rounding: rounding)
-        {
-            // Try to find closest x-value and take all entries for that x-value
-            entries = set.entriesForXValue(closest.x)
+
+        let barWidth = (self.chart as? BarChartDataProvider)?.barData?.barWidth
+        var entries: [ChartDataEntry] = []
+        if let barWidth = barWidth {
+            entries = set.entriesForXValue(xValue, barWidth: barWidth)
+        } else {
+            entries = set.entriesForXValue(xValue)
         }
+        // Note: removed this check to prevent bars being selected when entries array is empty
+         // if entries.isEmpty, let closest = set.entryForXValue(xValue, closestToY: .nan, rounding: rounding)
+        // {
+        //      Try to find closest x-value and take all entries for that x-value
+        //      entries = set.entriesForXValue(closest.x)
+        // }
 
         return entries.map { e in
             let px = chart.getTransformer(forAxis: set.axisDependency)

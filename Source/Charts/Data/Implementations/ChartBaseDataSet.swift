@@ -102,6 +102,10 @@ open class ChartBaseDataSet: NSObject, ChartDataSetProtocol, NSCopying
     {
         fatalError("entriesForXValue is not implemented in ChartBaseDataSet")
     }
+
+    open func entriesForXValue(_ xValue: Double, barWidth: Double) -> [ChartDataEntry] {
+        fatalError("entriesForXValue(xValue, barWidth) is not implemented in ChartBaseDataSet")
+    }
     
     open func entryIndex(
         x xValue: Double,
