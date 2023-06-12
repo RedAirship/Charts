@@ -104,7 +104,7 @@ open class ChartDataSet: ChartBaseDataSet
         let indexFrom = entryIndex(x: fromX, closestToY: .nan, rounding: .closest)
         var indexTo = entryIndex(x: toX, closestToY: .nan, rounding: .up)
         if indexTo == -1 { indexTo = entryIndex(x: toX, closestToY: .nan, rounding: .closest) }
-        
+
         guard indexTo >= indexFrom else { return }
         // only recalculate y
         self[indexFrom...indexTo].forEach(calcMinMaxY)
@@ -239,18 +239,20 @@ open class ChartDataSet: ChartBaseDataSet
             }
 
         case .closest:
+            /// 12 Jun 2023: Adding a break here so as to avoid having another bar selected in cashflow chart.
+            break
             // The closest value in the beginning of this function
             // `var closest = partitioningIndex { $0.x >= xValue }`
             // doesn't guarantee closest rounding method
-            if closest > startIndex {
-                let distanceAfter = abs(self[closest].x - xValue)
-                let distanceBefore = abs(self[index(before: closest)].x - xValue)
-                if distanceBefore < distanceAfter
-                {
-                    closest = index(before: closest)
-                }
-                closestXValue = self[closest].x
-            }
+            //if closest > startIndex {
+            //    let distanceAfter = abs(self[closest].x - xValue)
+            //    let distanceBefore = abs(self[index(before: closest)].x - xValue)
+            //    if distanceBefore < distanceAfter
+            //    {
+            //        closest = index(before: closest)
+            //    }
+            //    closestXValue = self[closest].x
+            //}
         }
 
         // Search by closest to y-value
